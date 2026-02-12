@@ -53,9 +53,7 @@ def main():
     print(f"Running {exe_path} in directory: {work_dir}")
 
     # 执行 .exe（阻塞，继承 stdout/stderr）
-    subprocess.run([
-                    "cmd", "/c", "start", "/wait",
-                    str(exe_path),
+    subprocess.run([str(exe_path),
                     "--quiet-mode",
                     "--local-install",
                     "--local-package-dir",
@@ -63,7 +61,8 @@ def main():
                     "--root",
                     os.path.join(appdata, "cygwin"),
                     "--packages",
-                    "git,make"
+                    "git,make",
+                    "--no-admin"
                     ], cwd=work_dir, check=True)
     with resources.as_file(resources.files("cygwinpack.postinstall")) as postinst_temp_dir:
         postinst = Path(postinst_temp_dir)
