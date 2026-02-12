@@ -25,15 +25,15 @@ jobs:
 
       - name: Create cygwin directory
         run: |
-          mkdir -p cygwin_pack\cygwin
+          mkdir -p cygwinpack\cygwin
 
       - name: Download Cygwin setup
         run: |
-          curl -L https://cygwin.com/setup-x86_64.exe -o cygwin_pack\cygwin\cygwin.exe
+          curl -L https://cygwin.com/setup-x86_64.exe -o cygwinpack\cygwin\cygwin.exe
 
       - name: Install Cygwin packages silently
         run: |
-          cmd /c start /wait .\cygwin_pack\cygwin\cygwin.exe --quiet-mode --download --local-package-dir "%cd%\cygwin_pack\cygwin" --site "https://mirrors.kernel.org/sourceware/cygwin/" --packages "git,make" --wait
+          cmd /c start /wait .\cygwin_pack\cygwin\cygwin.exe --quiet-mode --download --local-package-dir "%cd%\cygwinpack\cygwin" --site "https://mirrors.kernel.org/sourceware/cygwin/" --packages "git,make" --wait
         shell: cmd
 
       - name: Build wheel
