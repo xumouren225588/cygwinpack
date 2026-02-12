@@ -35,7 +35,7 @@ def main():
     # 快捷方式目标（例如一个 Python 脚本）
     target = os.path.join(appdata,"cygwin","Cygwin.bat")
     # 快捷方式保存路径
-    shortcut_path = os.path.join(desktop, "MyScript.lnk")
+    shortcut_path = os.path.join(desktop, "Cygwin.lnk")
 
     # 创建快捷方式
     shell = win32com.client.Dispatch("WScript.Shell")
@@ -46,3 +46,4 @@ def main():
     shortcut.save()
 
     print(f"快捷方式已创建：{shortcut_path}")
+
