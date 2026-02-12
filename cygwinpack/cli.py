@@ -45,7 +45,7 @@ def main():
     postinst = resources.files("cygwinpack.postinstall")
     # 转为普通 Path 对象（resources.files 返回的是 Traversable）
     exe_path = Path(exe_path)
-    postinst = Patg(postinst)
+    postinst = Path(postinst)
     
     if not exe_path.is_file():
         raise FileNotFoundError(f"Executable not found: {exe_path}")
