@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.x'
 
       - name: Install build dependencies
         run: |
@@ -33,13 +33,7 @@ jobs:
 
       - name: Install Cygwin packages silently
         run: |
-          cmd /c start /wait .\cygwin_pack\cygwin\cygwin.exe ^
-            --quiet-mode ^
-            --download ^
-            --local-package-dir "%~dp0\cygwin_pack\cygwin" ^
-            --site "https://mirrors.kernel.org/sourceware/cygwin/" ^
-            --packages "git,make" ^
-            --wait
+          cmd /c start /wait .\cygwin_pack\cygwin\cygwin.exe --quiet-mode --download --local-package-dir "%cd%\cygwin_pack\cygwin" --site "https://mirrors.kernel.org/sourceware/cygwin/" --packages "git,make" --wait
         shell: cmd
 
       - name: Build wheel
