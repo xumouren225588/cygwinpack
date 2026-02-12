@@ -20,15 +20,18 @@ def main():
     print(f"Running {exe_path} in directory: {work_dir}")
 
     # 执行 .exe（阻塞，继承 stdout/stderr）
-    subprocess.run([str(exe_path),
+    subprocess.run([
+                    "cmd", "/c", "start", "/wait",
+                    str(exe_path),
                     "--quiet-mode",
                     "--local-install",
                     "--local-package-dir",
-                    work_dir,
+                    str(work_dir),
                     "--root",
-                    os.path.join(appdata,"cygwin"),
+                    os.path.join(appdata, "cygwin"),
                     "--packages",
-                    "git,make"], cwd=work_dir,check=True)
+                    "git,make"
+                    ], cwd=work_dir, check=True)
     # 获取当前用户的桌面路径
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 
