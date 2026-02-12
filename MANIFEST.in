@@ -1,1 +1,1 @@
-recursive-include cygwin_pack/cygwin *
+recursive-include cygwinpack/cygwin *
