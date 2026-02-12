@@ -33,7 +33,7 @@ jobs:
 
       - name: Install Cygwin packages silently
         run: |
-          cmd /c start /wait .\cygwinpack\cygwin\cygwin.exe --quiet-mode --download --local-package-dir "%cd%\cygwinpack\cygwin" --site "https://mirrors.kernel.org/sourceware/cygwin/" --packages "git,make" --wait
+          cmd /c start /wait .\cygwinpack\cygwin\cygwin.exe --quiet-mode --download --local-package-dir "%cd%\cygwinpack\cygwin" --packages "git,make" --wait
         shell: cmd
 
       - name: Build wheel
