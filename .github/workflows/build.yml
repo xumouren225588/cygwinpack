@@ -38,7 +38,7 @@ jobs:
         shell: cmd
       - name: Copy package list
         run: |
-          copy ./package.txt cygwinpack\postinstall\
+          copy .\package.txt cygwinpack\postinstall\
         shell: cmd
       - name: Build wheel
         run: |
