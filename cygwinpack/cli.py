@@ -42,14 +42,16 @@ def main():
     appdata=os.getenv("LOCALAPPDATA")
     # 获取 .exe 的完整路径（Python 3.10+）
     exe_path = resources.files("cygwinpack.cygwin").joinpath("cygwin.exe")
+    pkglist = resources.files("cygwinpack.postinstall").joinpath("package.txt")
     # 转为普通 Path 对象（resources.files 返回的是 Traversable）
     exe_path = Path(exe_path)
-    
+    pkglist = Path(pkglist)
     if not exe_path.is_file():
         raise FileNotFoundError(f"Executable not found: {exe_path}")
 
     work_dir = exe_path.parent
-
+    with open(pkglist,"r",encoding="utf-8") as f:
+        pkgs=f.read()
     print(f"Running {exe_path} in directory: {work_dir}")
 
     # 执行 .exe（阻塞，继承 stdout/stderr）
@@ -61,7 +63,7 @@ def main():
                     "--root",
                     os.path.join(appdata, "cygwin"),
                     "--packages",
-                    "git,make",
+                    pkgs,
                     "--no-admin"
                     ], cwd=work_dir, check=True)
     with resources.as_file(resources.files("cygwinpack.postinstall")) as postinst_temp_dir:
@@ -84,5 +86,6 @@ def main():
     shortcut.save()
 
     print(f"快捷方式已创建：{shortcut_path}")
+
 
 
