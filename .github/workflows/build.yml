@@ -36,7 +36,10 @@ jobs:
         run: |
           cmd /c for /f "usebackq delims=" %i in ("package.txt") do start /wait .\cygwinpack\cygwin\cygwin.exe --quiet-mode --download --local-package-dir "%cd%\cygwinpack\cygwin" --site "https://mirror.cpsc.ucalgary.ca/mirror/cygwin.com/" --packages "%i" --wait
         shell: cmd
-
+      - name: Copy package list
+        run: |
+          copy ./package.txt cygwinpack\postinstall\
+        shell: cmd
       - name: Build wheel
         run: |
           python -m build --wheel --config-setting="--build-option=--plat-name=win_amd64"
