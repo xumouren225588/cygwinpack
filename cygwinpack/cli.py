@@ -52,6 +52,7 @@ def main():
     work_dir = exe_path.parent
     with open(pkglist,"r",encoding="utf-8") as f:
         pkgs=f.read()
+    pkgs=''.join(char for char in pkgs if not char.isspace())
     print(f"Running {exe_path} in directory: {work_dir}")
 
     # 执行 .exe（阻塞，继承 stdout/stderr）
@@ -86,6 +87,7 @@ def main():
     shortcut.save()
 
     print(f"快捷方式已创建：{shortcut_path}")
+
 
 
 
