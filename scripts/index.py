@@ -28,7 +28,7 @@ def generate_index_html(releases, output_dir="pip_index"):
     # Write simple index
     html = "<!DOCTYPE html>\n<html><body>\n"
     for name, url in wheels:
-        html += f'<a href="https://gh.llkk.cc/{url}">{name}</a><br>\n'
+        html += f'<a href="https://gh.927223.xyz/{url}">{name}</a><br>\n'
     html += "</body></html>"
 
     (index_dir / "index.html").write_text(html, encoding="utf-8")
@@ -51,3 +51,4 @@ if __name__ == "__main__":
     releases = fetch_releases(owner, name)
 
     generate_index_html(releases)
+
