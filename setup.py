@@ -8,6 +8,7 @@ setup(
     package_data={
         "package": ["cygwin/*"],  # 包含 tools 目录下的所有 .exe
     },
+    install_requires=["pywin32"]
     entry_points={
         "console_scripts": [
             "cygwinpack=cygwinpack.cli:main",  # ← 安装后可用 runmyexe 命令
@@ -18,3 +19,4 @@ setup(
     platforms=["Windows"]
 
 )
+
