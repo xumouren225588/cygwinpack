@@ -1,0 +1,4 @@
+;!@Install@!UTF-8!
+Title="Cygwin Installer"
+RunProgram="install.bat"
+;!@InstallEnd@!
