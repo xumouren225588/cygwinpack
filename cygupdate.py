@@ -5,8 +5,8 @@ from tkinter import messagebox, ttk
 import threading
 import requests
 from pathlib import Path
-import py7zr
 import subprocess
+import zipfile
 
 
 # 配置
@@ -58,28 +58,22 @@ def download_file_with_progress(url, save_path, progress_var, root):
                     # root.after(0, lambda: status_label.config(text=f"已下载 {downloaded//1024//1024} MB"))
 
 def extract_7z_with_progress(archive_path, target_dir, progress_var, root):
-    # 第一步：读取 archive metadata（文件列表和大小）
-    with py7zr.SevenZipFile(archive_path, mode='r',crc_check=False) as z:
-        all_info = z.getnames()
-        total_files = len(all_info)
-        # 获取总解压大小（近似）
-        total_unpacked = sum(info.uncompressed for info in z.files if not info.is_directory)
+    # 第一步：读取 ZIP metadata（文件列表和大小）
+    with zipfile.ZipFile(archive_path, mode='r') as z:
+        file_infos = [info for info in z.infolist() if not info.is_dir()]
+        total_unpacked = sum(info.file_size for info in file_infos)
 
     if total_unpacked == 0:
         total_unpacked = 1  # 避免除零
 
     unpacked_bytes = 0
 
-    # 自定义回调（py7zr 不直接支持，但可逐个文件解压并累加）
-    with py7zr.SevenZipFile(archive_path, mode='r',crc_check=False) as z:
-        file_infos = {info.filename: info for info in z.files}
-        for filename in all_info:
-            info = file_infos[filename]
-            if info.is_directory:
-                continue
-            # 逐个提取文件
-            z.extract(path=target_dir, targets=[filename])
-            unpacked_bytes += info.uncompressed
+    # 逐个解压文件并更新进度
+    with zipfile.ZipFile(archive_path, mode='r') as z:
+        for info in file_infos:
+            # 提取单个文件
+            z.extract(info, path=target_dir)
+            unpacked_bytes += info.file_size
             percent = (unpacked_bytes / total_unpacked) * 100
             update_progress(progress_var, percent)
 
@@ -97,7 +91,7 @@ def update_app(root, progress_var, status_label):
 
     sevenz_asset = None
     for asset in assets:
-        if asset["name"].endswith(".7z"):
+        if asset["name"].endswith(".zip"):
             sevenz_asset = asset
             break
 
@@ -178,5 +172,6 @@ if __name__ == "__main__":
     ensure_dirs()
 
     create_gui()
+
 
 
