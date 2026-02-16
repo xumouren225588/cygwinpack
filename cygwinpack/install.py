@@ -6,6 +6,7 @@ import win32com.client
 def run_scripts_in_order(script_dir):
     # 将路径转换为 Path 对象（更现代、易读）
     script_path = Path(script_dir)
+    script_path = script_path.resolve()
 
     # 确保目录存在
     if not script_path.is_dir():
@@ -49,7 +50,7 @@ def main():
         raise FileNotFoundError(f"Executable not found: {exe_path}")
     work_dir = exe_path.resolve()
     work_dir = work_dir.parent
-    
+
     with open(pkglist,"r",encoding="utf-8") as f:
         pkgs=f.read()
     pkgs=''.join(char for char in pkgs if not char.isspace())
@@ -88,7 +89,3 @@ def main():
     print(f"快捷方式已创建：{shortcut_path}")
 if __name__=="__main__":
     main()
-
-
-
-
