@@ -55,10 +55,10 @@ jobs:
           curl -L https://www.7-zip.org/a/7zr.exe -o 7.exe
       - name: build pyinstaller and pack
         run: |
-          pyinstaller -F cygupdate.py
+          pyinstaller -F -w cygupdate.py
           copy dist\cygupdate.exe cygwinpack\postinstall\update-cygwin.exe
           cd cygwinpack
-          pyinstaller -F install.py
+          pyinstaller -F -w install.py
           copy dist\install.exe .\install.exe
           rd /s /q dist
           ..\7.exe a ..\dist\cygwinpack_${{ env.TAG }}_amd64.7z postinstall cygwin install.bat install.exe
