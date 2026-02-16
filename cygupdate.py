@@ -84,73 +84,70 @@ def extract_7z_with_progress(archive_path, target_dir, progress_var, root):
             update_progress(progress_var, percent)
 
 def update_app(root, progress_var, status_label):
-    try:
-        status_label.config(text="正在获取最新 Release...")
-        root.update_idletasks()
 
-        resp = requests.get(GITHUB_API_LATEST)
-        resp.raise_for_status()
-        release = resp.json()
+    status_label.config(text="正在获取最新 Release...")
+    root.update_idletasks()
 
-        tag_name = release["tag_name"]
-        assets = release["assets"]
+    resp = requests.get(GITHUB_API_LATEST)
+    resp.raise_for_status()
+    release = resp.json()
 
-        sevenz_asset = None
-        for asset in assets:
-            if asset["name"].endswith(".7z"):
-                sevenz_asset = asset
-                break
+    tag_name = release["tag_name"]
+    assets = release["assets"]
 
-        if not sevenz_asset:
-            raise ValueError("未找到 .7z 发布文件")
+    sevenz_asset = None
+    for asset in assets:
+        if asset["name"].endswith(".7z"):
+            sevenz_asset = asset
+            break
 
-        remote_version = tag_name
-        local_version = get_local_version()
-        if local_version == remote_version:
-            status_label.config(text=f"已是最新版本：{remote_version}")
-            messagebox.showinfo("提示", "当前已是最新版本！")
-            progress_var.set(0)
-            return
+    if not sevenz_asset:
+        raise ValueError("未找到 .7z 发布文件")
 
-        digest = sevenz_asset["digest"]
-        if not digest.startswith("sha256:"):
-            raise ValueError("仅支持 sha256 校验")
-        expected_sha256 = digest.split(":", 1)[1].lower()
-
-        download_url = "https://gh.927223.xyz/"+sevenz_asset["browser_download_url"]
-        filename = sevenz_asset["name"]
-        archive_path = INSTALL_DIR / filename
-
-        # === 下载阶段 ===
-        status_label.config(text="正在下载更新包...")
-        download_file_with_progress(download_url, archive_path, progress_var, root)
-
-        # === 校验阶段 ===
-        status_label.config(text="正在校验...")
-        actual_sha256 = sha256sum(archive_path)
-        if actual_sha256 != expected_sha256:
-            archive_path.unlink(missing_ok=True)
-            raise ValueError("校验失败！")
-
-        # === 解压阶段 ===
-        status_label.config(text="正在解压文件...")
-        progress_var.set(0)  # 重置进度条用于解压
-        extract_7z_with_progress(archive_path, INSTALL_DIR, progress_var, root)
-        status_label.config(text="正在安装...")
-        subprocess.run([os.path.join(INSTALL_DIR,"install.exe")],check=True,cwd=INSTALL_DIR)
-        
-        # === 完成 ===
-        CURRENT_VERSION_FILE.write_text(remote_version, encoding='utf-8')
-        archive_path.unlink(missing_ok=True)
-
-        status_label.config(text=f"更新成功！版本：{remote_version}")
-        messagebox.showinfo("成功", f"Cygwin 已更新至 {remote_version}！")
-        progress_var.set(100)
-
-    except Exception as e:
-        status_label.config(text="更新失败")
-        messagebox.showerror("错误", f"更新出错：\n{str(e)}")
+    remote_version = tag_name
+    local_version = get_local_version()
+    if local_version == remote_version:
+        status_label.config(text=f"已是最新版本：{remote_version}")
+        messagebox.showinfo("提示", "当前已是最新版本！")
         progress_var.set(0)
+        return
+
+    digest = sevenz_asset["digest"]
+    if not digest.startswith("sha256:"):
+        raise ValueError("仅支持 sha256 校验")
+    expected_sha256 = digest.split(":", 1)[1].lower()
+
+    download_url = "https://gh.927223.xyz/"+sevenz_asset["browser_download_url"]
+    filename = sevenz_asset["name"]
+    archive_path = INSTALL_DIR / filename
+
+    # === 下载阶段 ===
+    status_label.config(text="正在下载更新包...")
+    download_file_with_progress(download_url, archive_path, progress_var, root)
+
+    # === 校验阶段 ===
+    status_label.config(text="正在校验...")
+    actual_sha256 = sha256sum(archive_path)
+    if actual_sha256 != expected_sha256:
+        archive_path.unlink(missing_ok=True)
+        raise ValueError("校验失败！")
+
+    # === 解压阶段 ===
+    status_label.config(text="正在解压文件...")
+    progress_var.set(0)  # 重置进度条用于解压
+    extract_7z_with_progress(archive_path, INSTALL_DIR, progress_var, root)
+    status_label.config(text="正在安装...")
+    subprocess.run([os.path.join(INSTALL_DIR,"install.exe")],check=True,cwd=INSTALL_DIR)
+    
+    # === 完成 ===
+    CURRENT_VERSION_FILE.write_text(remote_version, encoding='utf-8')
+    archive_path.unlink(missing_ok=True)
+
+    status_label.config(text=f"更新成功！版本：{remote_version}")
+    messagebox.showinfo("成功", f"Cygwin 已更新至 {remote_version}！")
+    progress_var.set(100)
+
+    
 
 def start_update(root, progress_var, status_label):
     thread = threading.Thread(
@@ -181,3 +178,4 @@ if __name__ == "__main__":
     ensure_dirs()
 
     create_gui()
+
