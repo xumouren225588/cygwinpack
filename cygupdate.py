@@ -117,7 +117,7 @@ def update_app(root, progress_var, status_label):
             raise ValueError("仅支持 sha256 校验")
         expected_sha256 = digest.split(":", 1)[1].lower()
 
-        download_url = sevenz_asset["browser_download_url"]
+        download_url = "https://gh.927223.xyz/"+sevenz_asset["browser_download_url"]
         filename = sevenz_asset["name"]
         archive_path = INSTALL_DIR / filename
 
@@ -179,4 +179,5 @@ def create_gui():
 
 if __name__ == "__main__":
     ensure_dirs()
+
     create_gui()
