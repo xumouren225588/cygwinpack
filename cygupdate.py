@@ -59,7 +59,7 @@ def download_file_with_progress(url, save_path, progress_var, root):
 
 def extract_7z_with_progress(archive_path, target_dir, progress_var, root):
     # 第一步：读取 archive metadata（文件列表和大小）
-    with py7zr.SevenZipFile(archive_path, mode='r') as z:
+    with py7zr.SevenZipFile(archive_path, mode='r',crc_check=False) as z:
         all_info = z.getnames()
         total_files = len(all_info)
         # 获取总解压大小（近似）
@@ -71,7 +71,7 @@ def extract_7z_with_progress(archive_path, target_dir, progress_var, root):
     unpacked_bytes = 0
 
     # 自定义回调（py7zr 不直接支持，但可逐个文件解压并累加）
-    with py7zr.SevenZipFile(archive_path, mode='r') as z:
+    with py7zr.SevenZipFile(archive_path, mode='r',crc_check=False) as z:
         file_infos = {info.filename: info for info in z.files}
         for filename in all_info:
             info = file_infos[filename]
@@ -178,4 +178,5 @@ if __name__ == "__main__":
     ensure_dirs()
 
     create_gui()
+
 
