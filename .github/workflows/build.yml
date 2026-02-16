@@ -61,11 +61,14 @@ jobs:
           pyinstaller -F -w install.py
           copy dist\install.exe .\install.exe
           rd /s /q dist
-          ..\7.exe a ..\dist\cygwinpack_${{ env.TAG }}_amd64.7z postinstall cygwin install.bat install.exe
+          ..\7.exe a ..\pack.7z postinstall cygwin install.bat install.exe
           cd ..
-          copy /b 7.sfx + config.txt + dist\cygwinpack_${{ env.TAG }}_amd64.7z dist\cygwinpack_${{ env.TAG }}_amd64.exe
+          copy /b 7.sfx + config.txt + pack.7z dist\cygwinpack_${{ env.TAG }}_amd64.exe
         shell: cmd
-          
+      - name: build zip
+        run: |
+          cd cygwinpack
+          Compress-Archive -Path "postinstall", "cygwin", "install.bat", "install.exe" -DestinationPath "..\dist\cygwinpack_${{ env.TAG }}_amd64.zip"
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
