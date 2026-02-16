@@ -47,8 +47,9 @@ def main():
     pkglist = Path(pkglist)
     if not exe_path.is_file():
         raise FileNotFoundError(f"Executable not found: {exe_path}")
-
-    work_dir = exe_path.parent
+    work_dir = exe_path.resolve()
+    work_dir = work_dir.parent
+    
     with open(pkglist,"r",encoding="utf-8") as f:
         pkgs=f.read()
     pkgs=''.join(char for char in pkgs if not char.isspace())
@@ -87,6 +88,7 @@ def main():
     print(f"快捷方式已创建：{shortcut_path}")
 if __name__=="__main__":
     main()
+
 
 
 
