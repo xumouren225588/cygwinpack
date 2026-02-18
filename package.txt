@@ -1,1 +1,1 @@
-git,make,python312,gcc-g++,texlive
+git,python312,python3-pip,nginx
