@@ -74,7 +74,6 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           files: dist/*
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -83,7 +82,16 @@ jobs:
           python scripts/index.py
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-
+      - uses: darkshredder/web-to-app-action@main
+        with:
+          build-folder-path: "build"
+      - name: Create apk GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          files: apk/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
